@@ -54,7 +54,7 @@ class HeatmapPlotType(object):
     Simple_MCF = 0              #a plot only for ClassicMCFResult data
     Simple_RRT = 1              #a plot only for RandomizedRoundingTriumvirate data
     Comparison_MCF_vs_RRT = 2   #a plot comparing ClassicMCFResult with RandomizedRoundingTriumvirate
-    VALUE_RANGE = range(Simple_MCF, Comparison_MCF_vs_RRT+1)
+    VALUE_RANGE = list(range(Simple_MCF, Comparison_MCF_vs_RRT+1))
 
 """
 Collection of heatmap plot specifications. Each specification corresponds to a specific plot and describes all essential
@@ -384,7 +384,7 @@ def compute_average_node_load(result_summary):
                 "This should be fixed in the future and might yield wrong results when considering more general "
                 "resource types. Disregard this warning if you know what you are doing.")
     cum_loads = []
-    for (x, y) in result_summary.load.keys():
+    for (x, y) in list(result_summary.load.keys()):
         if x == "universal":
             cum_loads.append(result_summary.load[(x, y)])
     return np.mean(cum_loads)
@@ -395,7 +395,7 @@ def compute_average_edge_load(result_summary):
                 "This should be fixed in the future and might yield wrong results when considering more general "
                 "resource types. Disregard this warning if you know what you are doing.")
     cum_loads = []
-    for (x, y) in result_summary.load.keys():
+    for (x, y) in list(result_summary.load.keys()):
         if x != "universal":
             cum_loads.append(result_summary.load[(x, y)])
     return np.mean(cum_loads)
@@ -406,7 +406,7 @@ def compute_max_node_load(result_summary):
                 "This should be fixed in the future and might yield wrong results when considering more general "
                 "resource types.  Disregard this warning if you know what you are doing.")
     cum_loads = []
-    for (x, y) in result_summary.load.keys():
+    for (x, y) in list(result_summary.load.keys()):
         if x == "universal":
             cum_loads.append(result_summary.load[(x, y)])
     return max(cum_loads)
@@ -417,7 +417,7 @@ def compute_max_edge_load(result_summary):
                 "This should be fixed in the future and might yield wrong results when considering more general "
                 "resource types. Disregard this warning if you know what you are doing.")
     cum_loads = []
-    for (x, y) in result_summary.load.keys():
+    for (x, y) in list(result_summary.load.keys()):
         if x != "universal":
             cum_loads.append(result_summary.load[(x, y)])
     return max(cum_loads)
@@ -425,14 +425,14 @@ def compute_max_edge_load(result_summary):
 
 def compute_avg_load(result_summary):
     cum_loads = []
-    for (x, y) in result_summary.load.keys():
+    for (x, y) in list(result_summary.load.keys()):
         cum_loads.append(result_summary.load[(x, y)])
     return np.mean(cum_loads)
 
 
 def compute_max_load(result_summary):
     cum_loads = []
-    for (x, y) in result_summary.load.keys():
+    for (x, y) in list(result_summary.load.keys()):
         cum_loads.append(result_summary.load[(x, y)])
     return max(cum_loads)
 
@@ -443,7 +443,7 @@ def select_scenarios_with_high_objective_gap_or_zero_requests(dc_baseline, algor
     ''' Function to select scenarios with high objective gap or no requests. This function is not used anymore but
         is left here for future usage.
     '''
-    scenario_ids = dc_baseline.algorithm_scenario_solution_dictionary[algorithm_name].keys()
+    scenario_ids = list(dc_baseline.algorithm_scenario_solution_dictionary[algorithm_name].keys())
 
     result = []
 
@@ -454,36 +454,36 @@ def select_scenarios_with_high_objective_gap_or_zero_requests(dc_baseline, algor
             result.append(scenario_id)
 
             if output_respective_generation_parameters:
-                print "Scenario {} has a very high gap, i.e. a gap of {} due to the objective bound being {} and the objective value being {}".format(
+                print("Scenario {} has a very high gap, i.e. a gap of {} due to the objective bound being {} and the objective value being {}".format(
                     scenario_id,
                     scenario_status.objGap,
                     scenario_status.objBound,
                     scenario_status.objValue
-                )
-                print "The computation for this scenario took {} seconds.".format(scenario_solution.runtime)
-                print "This scenario had the following generation parameters:"
+                ))
+                print("The computation for this scenario took {} seconds.".format(scenario_solution.runtime))
+                print("This scenario had the following generation parameters:")
                 generation_parameters = extract_generation_parameters(
                     dc_baseline.scenario_parameter_container.scenario_parameter_dict, scenario_id
                 )
                 for gen_param in generation_parameters:
-                    print "\t {}".format(gen_param)
+                    print("\t {}".format(gen_param))
         if scenario_solution.nu_real_req < 0.5:
             result.append(scenario_id)
 
             if output_respective_generation_parameters:
-                print "Scenario {} has doesn't have any reasonable scenarios in it...{}".format(scenario_id,
+                print("Scenario {} has doesn't have any reasonable scenarios in it...{}".format(scenario_id,
                                                                                                 scenario_status.objGap,
                                                                                                 scenario_status.objBound,
-                                                                                                scenario_status.objValue)
-                print "The computation for this scenario took {} seconds.".format(scenario_solution.runtime)
-                print "This scenario had the following generation parameters:"
+                                                                                                scenario_status.objValue))
+                print("The computation for this scenario took {} seconds.".format(scenario_solution.runtime))
+                print("This scenario had the following generation parameters:")
                 generation_parameters = extract_generation_parameters(
                     dc_baseline.scenario_parameter_container.scenario_parameter_dict, scenario_id
                 )
                 for gen_param in generation_parameters:
-                    print "\t {}".format(gen_param)
+                    print("\t {}".format(gen_param))
 
-    print "{} many scenarios experienced a very, very high gap or contained 0 requests".format(len(result))
+    print("{} many scenarios experienced a very, very high gap or contained 0 requests".format(len(result)))
     return result
 
 
@@ -497,7 +497,7 @@ def get_title_for_filter_specifications(filter_specifications):
 def extract_parameter_range(scenario_parameter_space_dict, key):
     if not isinstance(scenario_parameter_space_dict, dict):
         return None
-    for generator_name, value in scenario_parameter_space_dict.iteritems():
+    for generator_name, value in scenario_parameter_space_dict.items():
         if generator_name == key:
             return [key], value
         if isinstance(value, list):
@@ -522,7 +522,7 @@ def extract_generation_parameters(scenario_parameter_dict, scenario_id):
 
     results = []
 
-    for generator_name, value in scenario_parameter_dict.iteritems():
+    for generator_name, value in scenario_parameter_dict.items():
         if isinstance(value, set) and generator_name != "all" and scenario_id in value:
             return [[generator_name]]
         if isinstance(value, list):
@@ -550,7 +550,7 @@ def lookup_scenarios_having_specific_values(scenario_parameter_space_dict, path,
     current_path = path[:]
     current_dict = scenario_parameter_space_dict
     while len(current_path) > 0:
-        if isinstance(current_path[0], basestring):
+        if isinstance(current_path[0], str):
             current_dict = current_dict[current_path[0]]
             current_path.pop(0)
         elif current_path[0] == 0:
@@ -564,7 +564,7 @@ def lookup_scenario_parameter_room_dicts_on_path(scenario_parameter_space_dict, 
     dicts_on_path = []
     while len(current_path) > 0:
         dicts_on_path.append(current_dict_or_list)
-        if isinstance(current_path[0], basestring):
+        if isinstance(current_path[0], str):
             current_dict_or_list = current_dict_or_list[current_path[0]]
             current_path.pop(0)
         elif isinstance(current_path[0], int):
@@ -662,7 +662,7 @@ class AbstractPlotter(object):
         if self.save_plot:
             if not os.path.exists(output_path):
                 os.makedirs(output_path)
-            print "saving plot: {}".format(filename)
+            print("saving plot: {}".format(filename))
             plt.savefig(filename)
         if self.show_plot:
             plt.show()
@@ -1542,7 +1542,7 @@ def evaluate_baseline_and_randround(dc_baseline,
         forbidden_scenario_ids = set()
 
     if exclude_generation_parameters is not None:
-        for key, values_to_exclude in exclude_generation_parameters.iteritems():
+        for key, values_to_exclude in exclude_generation_parameters.items():
             parameter_filter_path, parameter_values = extract_parameter_range(
                 dc_baseline.scenario_parameter_container.scenarioparameter_room, key)
 
