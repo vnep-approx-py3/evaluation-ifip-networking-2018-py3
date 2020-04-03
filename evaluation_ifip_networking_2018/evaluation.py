@@ -384,7 +384,7 @@ def compute_average_node_load(result_summary):
                 "This should be fixed in the future and might yield wrong results when considering more general "
                 "resource types. Disregard this warning if you know what you are doing.")
     cum_loads = []
-    for (x, y) in list(result_summary.load.keys()):
+    for (x, y) in result_summary.load:
         if x == "universal":
             cum_loads.append(result_summary.load[(x, y)])
     return np.mean(cum_loads)
@@ -395,7 +395,7 @@ def compute_average_edge_load(result_summary):
                 "This should be fixed in the future and might yield wrong results when considering more general "
                 "resource types. Disregard this warning if you know what you are doing.")
     cum_loads = []
-    for (x, y) in list(result_summary.load.keys()):
+    for (x, y) in result_summary.load:
         if x != "universal":
             cum_loads.append(result_summary.load[(x, y)])
     return np.mean(cum_loads)
@@ -406,7 +406,7 @@ def compute_max_node_load(result_summary):
                 "This should be fixed in the future and might yield wrong results when considering more general "
                 "resource types.  Disregard this warning if you know what you are doing.")
     cum_loads = []
-    for (x, y) in list(result_summary.load.keys()):
+    for (x, y) in result_summary.load:
         if x == "universal":
             cum_loads.append(result_summary.load[(x, y)])
     return max(cum_loads)
@@ -417,7 +417,7 @@ def compute_max_edge_load(result_summary):
                 "This should be fixed in the future and might yield wrong results when considering more general "
                 "resource types. Disregard this warning if you know what you are doing.")
     cum_loads = []
-    for (x, y) in list(result_summary.load.keys()):
+    for (x, y) in result_summary.load:
         if x != "universal":
             cum_loads.append(result_summary.load[(x, y)])
     return max(cum_loads)
@@ -425,14 +425,14 @@ def compute_max_edge_load(result_summary):
 
 def compute_avg_load(result_summary):
     cum_loads = []
-    for (x, y) in list(result_summary.load.keys()):
+    for (x, y) in result_summary.load:
         cum_loads.append(result_summary.load[(x, y)])
     return np.mean(cum_loads)
 
 
 def compute_max_load(result_summary):
     cum_loads = []
-    for (x, y) in list(result_summary.load.keys()):
+    for (x, y) in result_summary.load:
         cum_loads.append(result_summary.load[(x, y)])
     return max(cum_loads)
 
@@ -1378,8 +1378,6 @@ class ComparisonBaselineVsRRT_Scatter_and_ECDF(AbstractPlotter):
                 return
 
             fix, ax = plt.subplots(figsize=(5, 4))
-            colors = list(self.colors.values())
-            markers = list(self.markers.values())
 
             filter_path_NRF, node_resource_factors = extract_parameter_range(self.scenarioparameter_room,
                                                                              "node_resource_factor")

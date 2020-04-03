@@ -61,11 +61,11 @@ class BaselineResultReducer(object):
             solution = pickle.load(input_file)
 
         ssd = solution.algorithm_scenario_solution_dictionary
-        for algorithm in list(ssd.keys()):
+        for algorithm in ssd:
             logger.info(".. Reducing results of algorithm {}".format(algorithm))
-            for scenario_id in list(ssd[algorithm].keys()):
+            for scenario_id in ssd[algorithm]:
                 logger.info("   .. handling scenario {}".format(scenario_id))
-                for exec_id in list(ssd[algorithm][scenario_id].keys()):
+                for exec_id in ssd[algorithm][scenario_id]:
                     params, scenario = solution.scenario_parameter_container.scenario_triple[scenario_id]
                     load = dict([((u, v), 0.0) for (u, v) in scenario.substrate.edges])
                     for u in scenario.substrate.nodes:
