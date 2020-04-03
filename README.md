@@ -103,7 +103,7 @@ the virtual environment for the project.
 
 ## Creating a Virtual Environment and Installing Packages
 
-First, create and activate a novel virtual environment for python2.7. 
+First, create and activate a novel virtual environment for python3.7. 
 
 ```
 python3.7 -m venv venv          #create new virtual environment in folder venv 
