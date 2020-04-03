@@ -1,17 +1,17 @@
 
 # Overview
 
-This repository contains the evaluation code as well as the raw results presented in our paper at IFIP Networking 2018 [1] 
-as well as in the corresonding technical report [2].
+This repository contains the **Python 3.X** evaluation code as well as the raw results presented in our paper at IFIP Networking 2018 [1] as well as in the corresonding technical report [2]. The original **Python 2.7** code can be found in the repository **[https://github.com/vnep-approx/evaluation-ifip-networking-2018](https://github.com/vnep-approx/evaluation-ifip-networking-2018)**.
 
 The implementation of the respective algorithms can be found in our separate python packages: 
-- **[alib](https://github.com/vnep-approx/alib)**, providing for example the data model and the Mixed-Integer Program for the classic multi-commodity formulation), as well as
-- **[vnep_approx](https://github.com/vnep-approx/vnep_approx)**, providing the novel Linear Programming (LP) formulation for cactus graphs -- and beyond these (see [3]) -- as well
+- **[alib](https://github.com/vnep-approx-py3/alib)**, providing for example the data model and the Mixed-Integer Program for the classic multi-commodity formulation), as well as
+- **[vnep_approx](https://github.com/vnep-approx-py3/vnep_approx)**, providing the novel Linear Programming (LP) formulation for cactus graphs -- and beyond these (see [3]) -- as well
 as our proposed Randomized Rounding algorithms
 
 Due to the size of the respective pickle-files, the generated scenarios and the full results for the algorithms is not contained in the repository but can be made accessible 
 to anyone interested (see contact at the end of the page). The data for plotting -- containing the most essential information -- together with the plots
 are stored within the **[results](results)** folder. 
+**Note:** As the results were generated using the Python 2.7 implementation, we cannot guarantee that the contained pickle files can be fully used in Python 3.7.
 
 Furthermore, for testing out the framework, we provide the folder **[sample](sample)** with the bash script **[run_samples.sh](sample/run_samples.sh)**
 to 
@@ -29,18 +29,19 @@ to
 
 # Dependencies and Requirements
 
-The **vnep_approx** library requires Python 2.7. Required python libraries: gurobipy, numpy, cPickle, networkx, matplotlib, and **[alib](https://github.com/vnep-approx/alib)**, and . 
+The **evaluation_ifip_networking_2018** library requires Python 3.X. Required python libraries are gurobipy, numpy, matplotlib, click,  **[alib](https://github.com/vnep-approx-py3/alib)**, and  **[vnep-approx](https://github.com/vnep-approx-py3/vnep-approx)**.
+
 
 Gurobi must be installed and the .../gurobi64/lib directory added to the environment variable LD_LIBRARY_PATH.
 
-For generating and executing (etc.) experiments, the environment variable ALIB_EXPERIMENT_HOME must be set to a path,
-such that the subfolders input/ output/ and log/ exist.
+For generating and executing (etc.) experiments, the environment variable **ALIB_EXPERIMENT_HOME** should be set to a path,
+such that the subfolders input/ output/ and log/ exist. If this environment variable is not set, the current working directory is traversed upwards until a directory containing input/, output/, and log/ is found.
 
-**Note**: Our source was only tested on Linux (specifically Ubuntu 14/16).  
+**Note**: Our source was tested on Linux (specifically Ubuntu 14 and Ubuntu 16) and Mac OS X.  
 
 # Installation
 
-To install **vnep_approx**, we provide a setup script. Simply execute from within vnep_approx's root directory: 
+To install **evaluation_ifip_networking_2018**, we provide a setup script. Simply execute from within evaluation_ifip_networking_2018's root directory: 
 
 ```
 pip install .
@@ -53,7 +54,7 @@ pip install -e .
 When choosing this option, sources are not copied during the installation but the local sources are used: changes to
 the sources are directly reflected in the installed package.
 
-We generally propose to install **vnep_approx** into a virtual environment (together with **alib**).
+We generally propose to install **evaluation_ifip_networking_2018** into a virtual environment (together with **alib** and **vnep-approx**).
 
 # Usage
 
@@ -105,8 +106,8 @@ the virtual environment for the project.
 First, create and activate a novel virtual environment for python2.7. 
 
 ```
-virtualenv --python=python2.7 venv  #create new virtual environment in folder venv 
-source venv/bin/activate            #activate the virtual environment
+python3.7 -m venv venv          #create new virtual environment in folder venv 
+source venv/bin/activate        #activate the virtual environment
 ```
 
 With the virtual environment still active, install the python extensions of [Gurobi](http://www.gurobi.com/) within the
@@ -131,7 +132,7 @@ specified in the file **[sample_scenarios.yml](sample/sample_scenarios.yml)**. M
 **[sample_scenarios.yml](sample/sample_scenarios.yml)** should be quite self-explanatory and you might read-up on the
 meaning of the parameters in the **alib**.
 ```
-python -m evaluation_ifip_networking_2018.cli generate_scenarios sample_scenarios.yml sample_scenarios.pickle
+python -m evaluation_ifip_networking_2018.cli generate-scenarios sample_scenarios.yml sample_scenarios.pickle
 ```
 If no error occured (check the log file in the log-folder!), you can move the generated pickle file to the **input/** folder 
 and clean the **log/**-folder.
@@ -141,8 +142,8 @@ and clean the **log/**-folder.
 To run the respective algorithms, you can execute the following commands. 
 
 ```
-python -m evaluation_ifip_networking_2018.cli start_experiment sample_mip_execution.yml 0 10000 --concurrent 2
-python -m evaluation_ifip_networking_2018.cli start_experiment sample_randround_execution.yml 0 10000 --concurrent 2
+python -m evaluation_ifip_networking_2018.cli start-experiment sample_mip_execution.yml 0 10000 --concurrent 2
+python -m evaluation_ifip_networking_2018.cli start-experiment sample_randround_execution.yml 0 10000 --concurrent 2
 ```
 
 Note that 2 processes are used for the computation and 
@@ -163,8 +164,8 @@ by a lot.
  
 
 ```
-python -m evaluation_ifip_networking_2018.cli reduce_to_plotdata_baseline_pickle sample_scenarios_results_mip.pickle 
-python -m evaluation_ifip_networking_2018.cli reduce_to_plotdata_randround_pickle sample_scenarios_results_randround.pickle
+python -m evaluation_ifip_networking_2018.cli reduce-to-plotdata-baseline-pickle sample_scenarios_results_mip.pickle 
+python -m evaluation_ifip_networking_2018.cli reduce-to-plotdata-randround-pickle sample_scenarios_results_randround.pickle
 ```
 
 Again, after executing each of these commands, the **log/**-folder must be cleared and the resulting (reduced) pickled must be placed
@@ -177,7 +178,7 @@ reduced pickles of the MIP and the randomized rounding algorithm, and the output
 
 ```
 mkdir -p ./plots
-python -m evaluation_ifip_networking_2018.cli evaluate_results sample_scenarios_results_mip_reduced.pickle sample_scenarios_results_randround_reduced.pickle ./plots --overwrite --output_filetype png --non-papermode  --filter_max_depth 0
+python -m evaluation_ifip_networking_2018.cli evaluate-results sample_scenarios_results_mip_reduced.pickle sample_scenarios_results_randround_reduced.pickle ./plots --overwrite --output_filetype png --non-papermode  --filter_max_depth 0
 ```
 
 Via many additional parameters, the output can be controlled:
@@ -226,11 +227,8 @@ Specifically, note that the **algorithm id** as well as the **execution config**
 value indexing the configuration in the list. For example, by setting **timelimit: [600,10800]** for the **ClassicMCF** algorithm,
 the algorithm would be executed twice: once with a time limit of 10 minutes and once with a time limit of 3 hours. 
 
-# Contact
+# Contact and Acknowledgement
 
-If you have any questions, simply write a mail to mrost(AT)inet.tu-berlin(DOT)de.
+If you have any questions, either open up an issue on GitHub or write a mail to mrost<AT>inet.tu-berlin<DOT>de.
 
-# Acknowledgement
-
-Major parts of this code were developed under the support of the **German BMBF Software
-Campus grant 01IS1205**.
+Major parts of this code were developed under the support of the **German BMBF Software Campus grant 01IS1205** from 2016 to 2018.
